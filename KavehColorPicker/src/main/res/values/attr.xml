@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MananSlider">
+        <attr name="sliderBarStrokeCap" format="enum">
+            <enum name="Butt" value="0" />
+            <enum name="Round" value="1" />
+            <enum name="Square" value="2" />
+        </attr>
+
+        <attr name="sliderStrokeSize" format="dimension"/>
+        <attr name="sliderStrokeColor" format="color"/>
+
+    </declare-styleable>
+
+</resources>
