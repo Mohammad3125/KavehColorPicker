@@ -190,33 +190,32 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
         callListeners()
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        if (canvas == null) {
-            return
+    override fun onDraw(canvas: Canvas) {
+        canvas.run {
+            drawRect(drawingStart, drawingTop, widthF, heightF, linePaint.apply {
+                shader = colorShader
+            })
+
+            drawRect(drawingStart, drawingTop, widthF, heightF, linePaint.apply {
+                shader = darknessShader
+            })
+
+            drawCircle(
+                circleX,
+                circleY,
+                circleIndicatorRadius,
+                circlePaint.apply {
+                    color = strokeColor
+                })
+
+            drawCircle(
+                circleX,
+                circleY,
+                circleIndicatorRadius - strokeSize,
+                circlePaint.apply {
+                    color = colorWithFullAlpha
+                })
         }
-        canvas.drawRect(drawingStart, drawingTop, widthF, heightF, linePaint.apply {
-            shader = colorShader
-        })
-
-        canvas.drawRect(drawingStart, drawingTop, widthF, heightF, linePaint.apply {
-            shader = darknessShader
-        })
-
-        canvas.drawCircle(
-            circleX,
-            circleY,
-            circleIndicatorRadius,
-            circlePaint.apply {
-                color = strokeColor
-            })
-
-        canvas.drawCircle(
-            circleX,
-            circleY,
-            circleIndicatorRadius - strokeSize,
-            circlePaint.apply {
-                color = colorWithFullAlpha
-            })
     }
 
 

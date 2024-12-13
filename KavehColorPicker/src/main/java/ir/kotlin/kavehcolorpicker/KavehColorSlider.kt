@@ -229,11 +229,7 @@ abstract class KavehColorSlider(context: Context, attributeSet: AttributeSet?) :
 
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        if (canvas == null) {
-            return
-        }
-
+    override fun onDraw(canvas: Canvas) {
         canvas.drawLine(
             drawingStart,
             drawingTop,
