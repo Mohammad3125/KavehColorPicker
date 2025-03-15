@@ -11,7 +11,7 @@ import android.view.View
  * This extension runs inside a view.
  * @param number Number to be converted.
  */
-internal fun View.dp(number: Number): Float {
+fun View.dp(number: Number): Float {
     val metric =
         getDisplayMetric(context)
 
@@ -23,7 +23,7 @@ internal fun View.dp(number: Number): Float {
  * If Context is null the default system display metric would be returned which has default
  * density etc...
  */
-internal fun getDisplayMetric(context: Context?): DisplayMetrics {
+fun getDisplayMetric(context: Context?): DisplayMetrics {
     return if (context != null) context.resources.displayMetrics else Resources.getSystem().displayMetrics
 }
 
