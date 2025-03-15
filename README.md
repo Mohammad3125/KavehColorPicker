@@ -13,6 +13,7 @@ This library provides a customizable color picker for android with simple interf
 - State of components are preserved during configuration changes (screen rotation etc...)
 - View size change events are implemented correctly to provide nice animations and layout changes
 - Components of this library both work together and separately
+- Change the value of ColorPicker and Sliders via code
 
 
 # SDK 🔢
@@ -83,7 +84,7 @@ because they are calculated in `KavehColorPicker`
 
         // KavehHueSlider
         hueSlider.setOnHueChangedListener { hue, argbColor ->
-            // Hue value is betwee [0..360]
+            // Hue value is between [0..360]
             // argbColor is just the color int representation of hue value with full brightness and saturation.
         }
 
@@ -125,7 +126,32 @@ slider.lineStrokeCap = Paint.Cap.ROUND
 You can change indicator's size only in `KavehColorPicker`
 ```kotlin
 // Default value is 24dp
-        colorPicker.circleIndicatorRadius = 24f
+colorPicker.circleIndicatorRadius = 24f
+```
+
+You can change the color of `KavehColorPicker' via 'color' setter
+```kotlin
+kavehColorPicker.color = Color.parseColor("#962626")
+kavehColorPicker.color = Color.argb(128,255,255,255)
+// Changing the color property in KavehColorPicker also changes the values of other sliders if the color was set after setting hue and alpha slider to KavehColorPicker.
+// This code changes the color of KavehColorPicker that causes other sliders to change value also.
+kavehColorPicker.alphaSliderView = alphaSlider
+kavehColorPicker.hueSliderView = hueSlider
+kavehColorPicker.color = Color.argb(128,255,255,255)
+// But if you change color before setting the other sliders to KavehColorPicker then the other sliders won't change.
+kavehColorPicker.color = Color.argb(128,255,255,255)
+kavehColorPicker.alphaSliderView = alphaSlider
+kavehColorPicker.hueSliderView = hueSlider
+```
+You can change the hue of 'KavehHueSlider' via 'hue' setter
+```kotlin
+// Hue between [0..360]
+kavehHueSlider.hue = 52f
+```
+You can change the alpha of 'KavehAlphaSlider' via 'alphaValue' setter
+```kotlin
+// Alpha between [0..1]
+kavehAlphaSlider.alphaValue = 0.4f
 ```
 
 # How to add dependency
@@ -153,6 +179,9 @@ Finally add dependency to your `build.gradle`
 ```gradle
  implementation 'com.github.Mohammad3125:KavehColorPicker:v1.0.0'
 ```
+
+# Changelog
+- **version 1.1.0**: added ability to change the value of sliders via code which causes other sliders to change value also. see customization section for more information.
 
 # License
 ```
