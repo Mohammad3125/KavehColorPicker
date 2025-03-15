@@ -1,7 +1,12 @@
 package ir.kotlin.kavehcolorpicker
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.BitmapShader
+import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.Shader
 import android.util.AttributeSet
 import kotlin.math.floor
 
@@ -30,7 +35,14 @@ class KavehHueSlider(context: Context, attributeSet: AttributeSet?) :
     private var onHueChanged: ((hue: Float, argbColor: Int) -> Unit)? = null
     private var onHueChangedListener: OnHueChangedListener? = null
 
-    val hue: Float
+    var hue: Float = 30f
+        set(value) {
+            field = value
+            isSliderChangingState = true
+            circleXFactor = (value / 360f)
+            calculateBounds(width.toFloat(),height.toFloat())
+            invalidate()
+        }
         get() =
             hsvHolder[0]
 

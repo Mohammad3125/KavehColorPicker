@@ -26,7 +26,14 @@ class KavehColorAlphaSlider(context: Context, attributeSet: AttributeSet?) :
 
     private var currentAlpha = 1f
 
-    val alphaValue: Float
+    var alphaValue: Float = 1f
+        set(value) {
+            field = value
+            isSliderChangingState = true
+            circleXFactor = value
+            calculateBounds(width.toFloat(),height.toFloat())
+            invalidate()
+        }
         get() = currentAlpha
 
 

@@ -1,12 +1,17 @@
 package ir.kotlin.kavehcolorpicker
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Shader
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
     KavehColorSlider(context, attributeSet) {
@@ -64,7 +69,7 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
                 this.hue = value.hue.toInt()
 
                 value.setOnHueChangedListener { hue, argbColor ->
-                    this.hue = hue.toInt()
+                    this.hue = hue.roundToInt()
                 }
             }
         }
@@ -77,8 +82,19 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
      * If [KavehColorAlphaSlider] is connected to this view via [alphaSliderView] then alpha value is
      * taken from [alphaSliderView] and applied on the final color.
      */
-    var color = Color.TRANSPARENT
-        private set
+    var color = Color.RED
+        set(value) {
+            field = value
+            Color.colorToHSV(value, hsvArray)
+            isSliderChangingState = true
+            circleXFactor = hsvArray[1]
+            circleYFactor = 1f - hsvArray[2]
+            calculateBounds(width.toFloat(), height.toFloat())
+            hue = hsvArray[0].roundToInt()
+            hueSliderView?.hue = hue.toFloat()
+            alphaSliderView?.alphaValue = Color.alpha(value) / 255f
+            invalidate()
+        }
         get() {
             return Color.HSVToColor(alphaValue, hsvArray)
         }
@@ -112,12 +128,15 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
             MeasureSpec.EXACTLY -> {
                 measureWidth
             }
+
             MeasureSpec.AT_MOST -> {
                 min(defaultSize, measureWidth)
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 defaultSize
             }
+
             else -> {
                 suggestedMinimumWidth
             }
@@ -127,12 +146,15 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
             MeasureSpec.EXACTLY -> {
                 measureHeight
             }
+
             MeasureSpec.AT_MOST -> {
                 min(defaultSize, measureHeight)
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 defaultSize
             }
+
             else -> {
                 suggestedMinimumWidth
             }
@@ -159,7 +181,7 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
             isFirstTimeLaying = false
             circleX = widthF
             circleY = drawingTop
-        } else if (isRestoredState) {
+        } else if (isRestoredState || isSliderChangingState) {
             circleX = ((widthF - drawingStart) * circleXFactor) + drawingStart
             circleY = ((heightF - drawingTop) * circleYFactor) + drawingTop
 
@@ -167,6 +189,7 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
             circleYFactor = 0f
 
             isRestoredState = false
+            isSliderChangingState = false
         } else {
             circleX = ((widthF - drawingStart) * fx) + drawingStart
             circleY = ((heightF - drawingTop) * fy) + drawingTop

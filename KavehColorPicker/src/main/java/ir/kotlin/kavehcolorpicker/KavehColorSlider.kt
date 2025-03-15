@@ -47,6 +47,7 @@ abstract class KavehColorSlider(context: Context, attributeSet: AttributeSet?) :
 
     protected var isFirstTimeLaying = true
     protected var isRestoredState = false
+    protected var isSliderChangingState = false
 
     private var isWrapContent = false
 
@@ -204,7 +205,7 @@ abstract class KavehColorSlider(context: Context, attributeSet: AttributeSet?) :
             isFirstTimeLaying = false
             circleX = widthF
             circleY = drawingTop
-        } else if (isRestoredState) {
+        } else if (isRestoredState || isSliderChangingState) {
             // Use the factors that are returned in 'onRestoreInstanceState' to correctly
             // calculate the position of indicators in case of screen rotation.
             circleX = ((widthF - drawingStart) * circleXFactor) + drawingStart
@@ -214,6 +215,7 @@ abstract class KavehColorSlider(context: Context, attributeSet: AttributeSet?) :
             circleYFactor = 0f
 
             isRestoredState = false
+            isSliderChangingState = false
         } else {
             // Calculate position of indicator when a size change happens on view.
             circleX = ((widthF - drawingStart) * fx) + drawingStart
