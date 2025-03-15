@@ -26,7 +26,7 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
     /**
      * Hue value in color picker. Should be in range of 0 to 360.
      */
-    var hue = 30
+    var hue = 30f
         set(value) {
             if (value < 0f || value > 360f) {
                 throw IllegalStateException("hue value should be between 0 and 360")
@@ -66,10 +66,10 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
             if (value != null) {
                 field = value
 
-                this.hue = value.hue.toInt()
+                this.hue = value.hue
 
                 value.setOnHueChangedListener { hue, argbColor ->
-                    this.hue = hue.roundToInt()
+                    this.hue = hue
                 }
             }
         }
@@ -90,8 +90,8 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
             circleXFactor = hsvArray[1]
             circleYFactor = 1f - hsvArray[2]
             calculateBounds(width.toFloat(), height.toFloat())
-            hue = hsvArray[0].roundToInt()
-            hueSliderView?.hue = hue.toFloat()
+            hue = hsvArray[0]
+            hueSliderView?.hue = hue
             alphaSliderView?.alphaValue = Color.alpha(value) / 255f
             invalidate()
         }
@@ -197,7 +197,7 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
     }
 
     private fun calculateColor(ex: Float, ey: Float) {
-        hsvArray[0] = hue.toFloat()
+        hsvArray[0] = hue
         if (!isFirstTimeLaying) {
             hsvArray[1] = (ex - drawingStart) / (widthF - drawingStart)
             hsvArray[2] = 1f - ((ey - drawingTop) / (heightF - drawingTop))
@@ -243,7 +243,7 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
 
 
     override fun initializeSliderPaint() {
-        hsvArray[0] = hue.toFloat()
+        hsvArray[0] = hue
         hsvArray[1] = 1f
         hsvArray[2] = 1f
 
@@ -274,7 +274,7 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
 
     override fun onSaveInstanceState(): Parcelable {
         return (super.onSaveInstanceState() as Bundle).apply {
-            putInt(HUE_KEY, hue)
+            putFloat(HUE_KEY, hue)
             putInt(ALPHA_KEY, alphaValue)
         }
     }
@@ -283,7 +283,7 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
         (state as Bundle).let { bundle ->
             isFirstTimeLaying = false
             alphaValue = bundle.getInt(ALPHA_KEY)
-            hue = bundle.getInt(HUE_KEY)
+            hue = bundle.getFloat(HUE_KEY)
         }
         super.onRestoreInstanceState(state)
     }
