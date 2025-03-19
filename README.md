@@ -181,8 +181,10 @@ Finally add dependency to your `build.gradle`
 ```
 
 # Changelog
-- **version 1.1.1**: fixed rounding errors for hue in KavehColorPicker.
-- **version 1.1.0**: added ability to change the value of sliders via code which causes other sliders to change value also. see customization section for more information.
+### Version 1.1.1 
+ - fixed rounding errors for hue in KavehColorPicker.
+### Version 1.1.0 
+ - added ability to change the value of sliders via code which causes other sliders to change value also. see customization section for more information.
 
 # License
 ```
