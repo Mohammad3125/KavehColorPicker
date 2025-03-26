@@ -77,21 +77,41 @@ call the same method name but instead pass an interface.
 If you connected `KavehHueSlider` and `KavehColorAlphaSlider` to `KavehColorPicker` , you don't need to call hue and alpha listeners
 because they are calculated in `KavehColorPicker`
 ```kotlin
-        // KavehColorPicker
-        colorPicker.setOnColorChangedListener { color ->
+// KavehColorPicker
+colorPicker.setOnColorChangedListener { color ->
 
-        }
+}
 
-        // KavehHueSlider
-        hueSlider.setOnHueChangedListener { hue, argbColor ->
-            // Hue value is between [0..360]
-            // argbColor is just the color int representation of hue value with full brightness and saturation.
-        }
+// KavehHueSlider
+hueSlider.setOnHueChangedListener { hue, argbColor ->
+    // Hue value is between [0..360]
+    // argbColor is just the color int representation of hue value with full brightness and saturation.
+}
 
-        // KavehColorAlphaSlider
-        colorAlphaSlider.setOnAlphaChangedListener { alpha ->
-            // Alpha value between [0..1]
-        }
+// KavehColorAlphaSlider
+colorAlphaSlider.setOnAlphaChangedListener { alpha ->
+    // Alpha value between [0..1]
+}
+```
+As of version 1.2.1 you can add listeners to be called when dragging ends on `KavehColorPicker` and `KavehHueSlider` and `KavehColorAlphaSlider`
+```kotlin
+// KavehColorPicker
+colorPicker.setOnColorChangeEndListener { color ->
+           
+}
+
+// KavehHueSlider
+hueSlider.setOnHueChangeEndListener { hue, argbColor ->
+    // Hue value is between [0..360]
+    // argbColor is just the color int representation of hue value with full brightness and saturation.
+}
+
+// KavehColorAlphaSlider
+colorAlphaSlider.setOnAlphaChangeEndListener { alpha ->
+    // Alpha value between [0..1]
+}
+
+
 ```
 
 # Customization
@@ -181,10 +201,13 @@ Finally add dependency to your `build.gradle`
 ```
 
 # Changelog
+### Version 1.2.1
+ - Add listeners for when dragging ends on all sliders. Now users can get color value only when dragging ends.
+ - Fix typos.
 ### Version 1.1.1 
- - fixed rounding errors for hue in KavehColorPicker.
+ - Fixed rounding errors for hue in KavehColorPicker.
 ### Version 1.1.0 
- - added ability to change the value of sliders via code which causes other sliders to change value also. see customization section for more information.
+ - Added ability to change the value of sliders via code which causes other sliders to change value also. see customization section for more information.
 
 # License
 ```
