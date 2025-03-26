@@ -24,45 +24,52 @@ class KavehColorAlphaSlider(context: Context, attributeSet: AttributeSet?) :
             }
         }
 
-    private var currentAlpha = 1f
+    private var _alphaValue = 1f
 
     var alphaValue: Float = 1f
         set(value) {
             field = value
             isSliderChangingState = true
             circleXFactor = value
-            calculateBounds(width.toFloat(),height.toFloat())
+            calculateBounds(width.toFloat(), height.toFloat())
             invalidate()
         }
-        get() = currentAlpha
+        get() = _alphaValue
 
 
     private var onAlphaChanged: ((alpha: Float) -> Unit)? = null
     private var onAlphaChangedListener: OnAlphaChangedListener? = null
 
+    private var onAlphaChangeEnd: ((alpha: Float) -> Unit)? = null
+    private var onAlphaChangeEndListener: OnAlphaChangeEndListener? = null
+
 
     override fun onCirclePositionChanged(circlePositionX: Float, circlePositionY: Float) {
 
-        currentAlpha = calculateAlphaAt(circlePositionX)
+        _alphaValue = calculateAlphaAt(circlePositionX)
 
         circleColor =
             Color.argb(
-                (255 * currentAlpha).toInt(),
+                (255 * _alphaValue).toInt(),
                 Color.red(selectedColor),
                 Color.green(selectedColor),
                 Color.blue(selectedColor)
             )
 
-        callListeners(currentAlpha)
+        callListeners(_alphaValue)
 
         invalidate()
 
     }
 
+    override fun onDragEnded(lastX: Float, lastY: Float) {
+        callEndListeners(_alphaValue)
+    }
+
     override fun calculateBounds(targetWidth: Float, targetHeight: Float) {
         super.calculateBounds(targetWidth, targetHeight)
 
-        currentAlpha = calculateAlphaAt(circleX).coerceIn(0f, 1f)
+        _alphaValue = calculateAlphaAt(circleX).coerceIn(0f, 1f)
 
         circleColor = calculateCircleColor()
 
@@ -70,7 +77,7 @@ class KavehColorAlphaSlider(context: Context, attributeSet: AttributeSet?) :
 
     private fun calculateCircleColor(): Int {
         return Color.argb(
-            (255 * currentAlpha).toInt(),
+            (255 * _alphaValue).toInt(),
             Color.red(selectedColor),
             Color.green(selectedColor),
             Color.blue(selectedColor)
@@ -100,7 +107,7 @@ class KavehColorAlphaSlider(context: Context, attributeSet: AttributeSet?) :
 
         circleColor =
             Color.argb(
-                (255 * currentAlpha).toInt(),
+                (255 * _alphaValue).toInt(),
                 Color.red(selectedColor),
                 Color.green(selectedColor),
                 Color.blue(selectedColor)
@@ -129,14 +136,31 @@ class KavehColorAlphaSlider(context: Context, attributeSet: AttributeSet?) :
         onAlphaChanged = onAlphaChangedListener
     }
 
+    fun setOnAlphaChangeEndListener(listener: ((alpha: Float) -> Unit)) {
+        onAlphaChangeEnd = listener
+    }
+
+    fun setOnAlphaChangeEndListener(listener: OnAlphaChangeEndListener) {
+        onAlphaChangeEndListener = listener
+    }
+
     private fun callListeners(alpha: Float) {
         onAlphaChanged?.invoke(alpha)
         onAlphaChangedListener?.onAlphaChanged(alpha)
     }
 
+    private fun callEndListeners(alpha: Float) {
+        onAlphaChangeEndListener?.onAlphaChangeEnd(alpha)
+        onAlphaChangeEnd?.invoke(alpha)
+    }
+
 
     interface OnAlphaChangedListener {
-        fun onAlphaChanged(hue: Float)
+        fun onAlphaChanged(alpha: Float)
+    }
+
+    interface OnAlphaChangeEndListener {
+        fun onAlphaChangeEnd(alpha: Float)
     }
 
     companion object {

@@ -34,13 +34,15 @@ class KavehHueSlider(context: Context, attributeSet: AttributeSet?) :
 
     private var onHueChanged: ((hue: Float, argbColor: Int) -> Unit)? = null
     private var onHueChangedListener: OnHueChangedListener? = null
+    private var onHueChangeEnd: ((hue: Float, argbColor: Int) -> Unit)? = null
+    private var onHueChangeEndListener: OnHueChangeEndListener? = null
 
     var hue: Float = 30f
         set(value) {
             field = value
             isSliderChangingState = true
             circleXFactor = (value / 360f)
-            calculateBounds(width.toFloat(),height.toFloat())
+            calculateBounds(width.toFloat(), height.toFloat())
             invalidate()
         }
         get() =
@@ -52,6 +54,10 @@ class KavehHueSlider(context: Context, attributeSet: AttributeSet?) :
         callListeners(hsvHolder[0], circleColor)
 
         invalidate()
+    }
+
+    override fun onDragEnded(lastX: Float, lastY: Float) {
+        callOnLastEventListener(hsvHolder[0], circleColor)
     }
 
     private fun calculateColorAt(ex: Float): Int {
@@ -98,14 +104,30 @@ class KavehHueSlider(context: Context, attributeSet: AttributeSet?) :
         onHueChanged = onHueChangedListener
     }
 
+    fun setOnHueChangeEndListener(listener: ((hue: Float, argbColor: Int) -> Unit)) {
+        onHueChangeEnd = listener
+    }
+
+    fun setOnHueChangeEndListener(listener: OnHueChangeEndListener) {
+        onHueChangeEndListener = listener
+    }
+
     private fun callListeners(hue: Float, argbColor: Int) {
         onHueChanged?.invoke(hue, argbColor)
         onHueChangedListener?.onHueChanged(hue, argbColor)
     }
 
+    private fun callOnLastEventListener(hue: Float, argbColor: Int) {
+        onHueChangeEnd?.invoke(hue, argbColor)
+        onHueChangeEndListener?.onHueChangeEnd(hue, argbColor)
+    }
 
     interface OnHueChangedListener {
         fun onHueChanged(hue: Float, argbColor: Int)
+    }
+
+    interface OnHueChangeEndListener {
+        fun onHueChangeEnd(hue: Float, argbColor: Int)
     }
 
 }

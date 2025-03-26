@@ -11,7 +11,6 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
     KavehColorSlider(context, attributeSet) {
@@ -105,6 +104,9 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
     private var onColorChanged: ((color: Int) -> Unit)? = null
     private var onColorChangedListener: OnColorChangedListener? = null
 
+    private var onColorChangeEnd: ((color: Int) -> Unit)? = null
+    private var onColorChangeEndListener: OnColorChangeEndListener? = null
+
     private var defaultSize = dp(320).toInt()
 
     init {
@@ -115,6 +117,10 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
         calculateColor(circlePositionX, circlePositionY)
 
         invalidate()
+    }
+
+    override fun onDragEnded(lastX: Float, lastY: Float) {
+        callEndListeners()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -298,15 +304,33 @@ class KavehColorPicker(context: Context, attributeSet: AttributeSet?) :
         callListeners()
     }
 
+    fun setOnColorChangeEndListener(listener: OnColorChangeEndListener) {
+        onColorChangeEndListener = listener
+    }
+
+    fun setOnColorChangeEndListener(listener: ((color: Int) -> Unit)) {
+        onColorChangeEnd = listener
+    }
+
     private fun callListeners() {
         val color = Color.HSVToColor(alphaValue, hsvArray)
         onColorChanged?.invoke(color)
         onColorChangedListener?.onColorChanged(color)
     }
 
+    private fun callEndListeners() {
+        val color = Color.HSVToColor(alphaValue, hsvArray)
+        onColorChangeEnd?.invoke(color)
+        onColorChangeEndListener?.onColorChangeEnd(color)
+    }
+
 
     interface OnColorChangedListener {
         fun onColorChanged(color: Int)
+    }
+
+    interface OnColorChangeEndListener {
+        fun onColorChangeEnd(color: Int)
     }
 
     companion object {

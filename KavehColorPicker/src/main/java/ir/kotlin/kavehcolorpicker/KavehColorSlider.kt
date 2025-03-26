@@ -107,6 +107,15 @@ abstract class KavehColorSlider(context: Context, attributeSet: AttributeSet?) :
 
     }
 
+    /**
+     * Called when motion event ends
+     * @param lastX Last position of touch in x axis
+     * @param lastY Last position of touch in y axis
+     */
+    protected open fun onDragEnded(lastX: Float, lastY: Float) {
+
+    }
+
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event?.let { e ->
@@ -115,20 +124,24 @@ abstract class KavehColorSlider(context: Context, attributeSet: AttributeSet?) :
                     changePositionOfCircle(e.x, e.y)
                     true
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     changePositionOfCircle(e.x, e.y)
                     true
                 }
+
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     changePositionOfCircle(e.x, e.y)
+                    onDragEnded(e.x, e.y)
                     false
                 }
+
                 else -> {
                     false
                 }
             }
         }
-        return super.onTouchEvent(event)
+        return super.onTouchEvent(null)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -150,10 +163,12 @@ abstract class KavehColorSlider(context: Context, attributeSet: AttributeSet?) :
             MeasureSpec.EXACTLY -> {
                 measureHeight
             }
+
             MeasureSpec.AT_MOST, MeasureSpec.UNSPECIFIED -> {
                 isWrapContent = true
                 wrapContentSize
             }
+
             else -> {
                 suggestedMinimumHeight
             }
