@@ -197,7 +197,7 @@ Or if it doesn't find library or repositories aren't defined here go to `setting
 ```
 Finally add dependency to your `build.gradle`
 ```gradle
- implementation 'com.github.Mohammad3125:KavehColorPicker:v1.1.1'
+ implementation 'com.github.Mohammad3125:KavehColorPicker:v1.2.1'
 ```
 
 # Changelog
